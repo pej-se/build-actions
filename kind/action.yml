@@ -24,6 +24,9 @@ runs:
       shell: bash
       # kubectl is already installed on the Github Ubuntu worker
       run: |
-        kubectl get nodes -o wide
-        kubectl get pods --all-namespaces -o wide
-        kubectl get services --all-namespaces -o wide
+        pwd
+        ls -l
+        ls -a
+#        kubectl get nodes -o wide
+#        kubectl get pods --all-namespaces -o wide
+#        kubectl get services --all-namespaces -o wide
