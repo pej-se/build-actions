@@ -13,12 +13,15 @@ runs:
       with:
         go-version: 1.13
     - name: Install latest version of Kind
+      shell: bash
       run: |
         GO111MODULE=on go get sigs.k8s.io/kind
     - name: Create Kind cluster
+      shell: bash
       run: |
         PATH=$(go env GOPATH)/bin:$PATH kind create cluster --config kind/kind-config.yaml
     - name: Run some sanity checks
+      shell: bash
       # kubectl is already installed on the Github Ubuntu worker
       run: |
         kubectl get nodes -o wide
