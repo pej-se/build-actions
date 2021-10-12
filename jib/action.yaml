@@ -1,4 +1,4 @@
-name: Kind Cluster with Istio
+name: Publish docker image with jib
 
 inputs:
   team:
