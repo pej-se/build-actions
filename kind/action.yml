@@ -1,20 +1,13 @@
 name: Kind Cluster with Istio
 
-on:
-  workflow_call:
-    inputs:
-      namespace:
-        required: true
-        type: string
-#    secrets:
-#      token:
-#        required: true
+inputs:
+  namespace:
+    required: true
+    type: string
 
-jobs:
-  setup-cluster:
-    name: Create a Kind cluster with Istio
-    runs-on: [ubuntu-latest]
-    steps:
+runs:
+  using: "composite"
+  steps:
     - uses: actions/checkout@v2
     - uses: actions/setup-go@v2
       with:
