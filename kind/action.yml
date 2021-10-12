@@ -19,7 +19,7 @@ runs:
     - name: Create Kind cluster
       shell: bash
       run: |
-        PATH=$(go env GOPATH)/bin:$PATH kind create cluster --config kind/kind-config.yaml
+        PATH=$(go env GOPATH)/bin:$PATH kind create cluster
     - name: Run some sanity checks
       shell: bash
       # kubectl is already installed on the Github Ubuntu worker
