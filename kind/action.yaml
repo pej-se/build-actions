@@ -8,15 +8,12 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-go@v2
-      with:
-        go-version: 1.13
-    - name: Install latest version of Kind
+    - name: Create k8s Kind Cluster
+      uses: helm/kind-action@v1.0.0
+    - name: Install Istio
+      uses: bilelkhalsi/istio-action@v0.1.0
+    - name: Create kubernetes namespace with istio injection enabled
       shell: bash
       run: |
-        GO111MODULE=on go get sigs.k8s.io/kind
-    - name: Create Kind cluster
-      shell: bash
-      run: |
-        PATH=$(go env GOPATH)/bin:$PATH kind create cluster
+        kubectl create namespace ${{ inputs.namespace }}
+        kubectl label namespace ${{ inputs.namespace }} istio-injection=enabled --overwrite
