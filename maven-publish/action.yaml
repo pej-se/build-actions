@@ -20,11 +20,11 @@ runs:
       shell: bash
       run: | # Regex to get the registry name/id and location from a gcp artifact registry uri
         function regex { gawk 'match($0,/'$1'/, ary) {print ary['${2:-'0'}']}'; }
-        PATTERN='.+\/\/(\w.+)-maven.+\/(\w+)''
+        PATTERN='.+\/\/(\w.+)-maven.+\/(\w+)'
         LOCATION=$(echo ${{ inputs.registry }} | regex $PATTERN 1)
         REGISTRY_NAME=$(echo ${{ inputs.registry }} | regex $PATTERN 2)
         gcloud config set artifacts/repository $REGISTRY_NAME
         gcloud config set artifacts/location $LOCATION
     - name: Publish with maven-publish
       shell: bash
-      run: ./gradlew publish --stacktrace
+      run: ./gradlew publish --stacktracefu
