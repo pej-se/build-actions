@@ -27,4 +27,4 @@ runs:
         gcloud config set artifacts/location $LOCATION
     - name: Publish with maven-publish
       shell: bash
-      run: ./gradlew publish --stacktracefu
+      run: ./gradlew publish --stacktrace
