@@ -23,6 +23,8 @@ runs:
         PATTERN='.+\/\/(\w.+)-maven.+\/(\w+)'
         LOCATION=$(echo ${{ inputs.registry }} | regex $PATTERN 1)
         REGISTRY_NAME=$(echo ${{ inputs.registry }} | regex $PATTERN 2)
+        echo $LOCATION
+        echo $REGISTRY_NAME
         gcloud config set artifacts/repository $REGISTRY_NAME
         gcloud config set artifacts/location $LOCATION
     - name: Publish with maven-publish
