@@ -36,10 +36,10 @@ runs:
     - shell: bash
       run: gcloud auth configure-docker ${{ inputs.registry }}
     - uses: actions/setup-java@v2
-        with:
-          java-version: ${{ inputs.java_version }}
-          distribution: adopt
-          cache: gradle
+      with:
+        java-version: ${{ inputs.java_version }}
+        distribution: adopt
+        cache: gradle
     - shell: bash
       run: |
         ./gradlew ${{ inputs.gradle_project }}:jib \ 
