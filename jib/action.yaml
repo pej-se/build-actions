@@ -21,8 +21,7 @@ inputs:
     type: string
   java_version:
     required: false
-    default: '11'
-
+    default: '17'
 
 runs:
   using: "composite"
@@ -37,7 +36,7 @@ runs:
     - uses: actions/setup-java@v2
       with:
         java-version: ${{ inputs.java_version }}
-        distribution: adopt
+        distribution: liberica
         cache: gradle
     - shell: bash
       run: |
