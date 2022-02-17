@@ -27,10 +27,10 @@ runs:
   using: "composite"
   steps:
     - uses: actions/checkout@v2
-    - uses: google-github-actions/setup-gcloud@master
+    - uses: google-github-actions/auth@v0
       with:
-        service_account_key: ${{ inputs.google_sa_key }}
-        export_default_credentials: true
+        credentials_json: ${{ inputs.google_sa_key }}
+    - uses: google-github-actions/setup-gcloud@master
     - shell: bash
       run: gcloud auth configure-docker ${{ inputs.registry }}
     - uses: actions/setup-java@v2
