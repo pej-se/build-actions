@@ -1,26 +1,28 @@
 name: Publish docker image with jib
+description: Builds and publishes docker image with jib
 
 inputs:
   project:
     required: true
-    type: string
+    description: Top level project to use as parent group for image
   gradle_project:
     required: true
-    type: string
+    description: Gradle project
   service:
     required: true
-    type: string
+    description: Gradle service
   tag:
     required: true
-    type: string
+    description: Tag for the docker image
   google_sa_key:
     required: true
-    type: string
+    description: GCS Service Account Json Key
   registry:
     required: true
-    type: string
+    description: GCS Artifact registry
   java_version:
     required: false
+    description: Java version
     default: '17'
 
 runs:
