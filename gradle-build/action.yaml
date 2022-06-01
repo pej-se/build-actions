@@ -1,0 +1,38 @@
+name: Build with gradle 
+description: Builds project with gradle
+
+inputs:
+  google_sa_key:
+    required: true
+    description: GCS Service Account Json Key
+  java_version:
+    required: false
+    description: Java version
+    default: '17'
+  buf_token:
+    required: false
+    description: BUF API Token
+    default: 'NA'
+
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/checkout@v2
+    - uses: google-github-actions/auth@v0
+      with:
+        credentials_json: ${{ inputs.google_sa_key }}
+    - uses: google-github-actions/setup-gcloud@v0
+    - uses: actions/setup-java@v2
+      with:
+        java-version: ${{ inputs.java_version }}
+        distribution: liberica
+        cache: gradle
+    - shell: bash
+      run: |
+        ./gradlew build --continue --no-daemon
+      env:
+        BUF_TOKEN: ${{ inputs.buf_token }}
+    - uses: mikepenz/action-junit-report@v2
+      if: always()
+      with:
+        report_paths: '**/build/test-results/test/TEST-*.xml'
