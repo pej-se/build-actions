@@ -1,0 +1,28 @@
+name: Changed directories
+description: Returns array of directories containing changes
+
+inputs:
+  base_dir:
+    required: true
+    description: The base dir to look for subdirectories in
+
+outputs:
+  changes: 
+    description: "List of affected directories"
+    value: ${{ steps.filter.outputs.changes }}
+
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/checkout@v2
+    - id: finding-directories
+      shell: bash
+      run: |
+        echo $(ls -d ${{ inputs.base_dir }}/* | awk -F/ '{print$2": ["$1"/"$2"/**, buildSrc/**, libs/**, libs.versions.gradle.toml ]"}') >> dirs.txt
+        echo "::set-output name=directories::$(cat dirs.txt)"
+    - uses: dorny/paths-filter@v2
+      id: filter
+      with:
+        base: ${{ github.ref }}
+        filters: |
+          ${{ steps.finding-directories.outputs.directories }}
