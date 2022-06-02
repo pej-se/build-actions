@@ -13,6 +13,10 @@ inputs:
     required: false
     description: BUF API Token
     default: 'NA'
+  init_file:
+    required: false
+    description: Path to init file
+    default: ''
 
 runs:
   using: "composite"
@@ -29,7 +33,12 @@ runs:
         cache: gradle
     - shell: bash
       run: |
-        ./gradlew build --continue --no-daemon
+        if [ -z "${{ inputs.init_file }}" ]
+        then
+          ./gradlew build --continue --no-daemon
+        else 
+          ./gradlew --init-script init.gradle.kts build --continue --no-daemon
+        fi
       env:
         BUF_TOKEN: ${{ inputs.buf_token }}
     - uses: mikepenz/action-junit-report@v2
