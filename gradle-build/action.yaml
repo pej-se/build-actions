@@ -37,7 +37,7 @@ runs:
         then
           ./gradlew clean build --continue --no-daemon
         else
-          ./gradlew --init-script init.gradle.kts clean build --continue --no-daemon
+          ./gradlew --init-script "${{ inputs.init_file }}" clean build --continue --no-daemon
         fi
       env:
         BUF_TOKEN: ${{ inputs.buf_token }}
