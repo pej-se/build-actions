@@ -39,9 +39,9 @@ runs:
       run: |
         if [ -z "${{ inputs.init_file }}" ]
         then
-          ./gradlew clean build --continue --no-daemon "${{ inputs.gradle_args }}"
+          ./gradlew clean build --continue --no-daemon ${{ inputs.gradle_args }}
         else
-          ./gradlew --init-script "${{ inputs.init_file }}" clean build --continue --no-daemon "${{ inputs.gradle_args }}"
+          ./gradlew --init-script "${{ inputs.init_file }}" clean build --continue --no-daemon ${{ inputs.gradle_args }}
         fi
       env:
         BUF_TOKEN: ${{ inputs.buf_token }}
