@@ -1,0 +1,54 @@
+name: Elevate Artifact
+on:
+  workflow_call:
+    inputs:
+      reference:
+        required: true
+        type: string
+      new-tag:
+        required: true
+        type: string
+      source-tag:
+        required: true
+        type: string
+      target-tag:
+        required: true
+        type: string
+    secrets:
+      GKE_SA_KEY:
+        required: true
+      GCP_DOCKER_ARTIFACT_REGISTRY:
+        required: true
+
+jobs:
+  elevate-artifact:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: google-github-actions/auth@v0
+        with:
+          credentials_json: ${{ secrets.GKE_SA_KEY }}
+      - uses: google-github-actions/setup-gcloud@v0
+      - name: Set tag
+        id: tag
+        run: |-
+          echo "tag=${{ secrets.GCP_DOCKER_ARTIFACT_REGISTRY }}/${{ inputs.new-tag }}" >> $GITHUB_OUTPUT
+          echo "source-tag=${{ secrets.GCP_DOCKER_ARTIFACT_REGISTRY }}/${{ inputs.source-tag }}" >> $GITHUB_OUTPUT
+          echo "target-tag=${{ secrets.GCP_DOCKER_ARTIFACT_REGISTRY }}/${{ inputs.target-tag }}" >> $GITHUB_OUTPUT
+      - name: Pull image
+        run: |-
+          gcloud auth configure-docker europe-north1-docker.pkg.dev -q
+          docker pull ${{ steps.tag.outputs.source-tag }}
+      - name: Tag image
+        run: |-
+          docker image tag ${{ steps.tag.outputs.source-tag }} ${{ steps.tag.outputs.tag }}
+          docker image tag ${{ steps.tag.outputs.source-tag }} ${{ steps.tag.outputs.target-tag }}
+      - name: Publish image
+        run: |-
+          gcloud auth configure-docker europe-north1-docker.pkg.dev -q
+          docker push ${{ steps.tag.outputs.tag }}
+          docker push ${{ steps.tag.outputs.target-tag }}
+      - uses: actions/checkout@v3
+      - name: "🏷️ Push tag"
+        uses: EndBug/latest-tag@latest
+        with:
+          ref: ${{ inputs.reference }}
