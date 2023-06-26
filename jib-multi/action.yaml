@@ -1,0 +1,44 @@
+name: Publish docker image with jib
+description: Builds and publishes docker image with jib
+
+inputs:
+  project:
+    required: true
+    description: Top level project to use as parent group for image
+  services:
+    required: true
+    description: Gradle services in json array string
+  tag:
+    required: true
+    description: Tag for the docker image
+  google_sa_key:
+    required: true
+    description: GCS Service Account Json Key
+  registry:
+    required: true
+    description: GCS Artifact registry
+  java_version:
+    required: false
+    description: Java version
+    default: '17'
+
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/checkout@v3
+    - uses: google-github-actions/auth@v0
+      with:
+        credentials_json: ${{ inputs.google_sa_key }}
+    - uses: google-github-actions/setup-gcloud@v0
+    - shell: bash
+      run: gcloud auth configure-docker ${{ inputs.registry }}
+    - uses: actions/setup-java@v3
+      with:
+        java-version: ${{ inputs.java_version }}
+        distribution: liberica
+        cache: gradle
+    - shell: bash
+      run: |
+        for service in $(echo '${{ inputs.services }}' | jq -c -r '.[]'); do                                                                                                                                                                                                           ✔  3.0.2 Ruby  23:24:33 
+        ./gradlew :services:$service:jib --image ${{ inputs.registry }}/${{ inputs.project }}/$service:${{ inputs.tag }} -Djib.console=plain --no-daemon
+        done        
