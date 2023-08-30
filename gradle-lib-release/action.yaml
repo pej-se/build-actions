@@ -15,6 +15,10 @@ inputs:
     required: false
     description: Java version
     default: '17'
+  gradle_args:
+    required: false
+    description: Extra gradle args
+    default: ''
 
 runs:
   using: "composite"
@@ -37,7 +41,7 @@ runs:
         cache: gradle
     - name: Build and test
       shell: bash
-      run: ./gradlew clean build --no-daemon
+      run: ./gradlew clean build --no-daemon ${{ inputs.gradle_args }}
     - name: Generate test report
       uses: mikepenz/action-junit-report@v3
       if: always()
